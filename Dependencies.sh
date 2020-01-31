@@ -1,4 +1,4 @@
-sudo apt-get install python3-pip y
+yes | sudo apt-get install python3-pip 
 sudo pip3 install --upgrade setuptools
 sudo pip3 install RPI.GPIO
 sudo pip3 install adafruit-circuitpython-tsl2591
