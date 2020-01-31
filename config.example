@@ -1,1 +1,17 @@
-#This file should contain any private keys that are required for APIs and so on
+# Private information / environment variables can be stored here
+
+#Deployment/Device Info
+DEPLOYMENT = "Development"
+ID = 0
+
+#File Paths
+LUX_PATH = "fakepath/DeploymentData/Light/Light.csv"
+TEMPERATURE_PATH = "fakepath/DeploymentData/Temperature/Temperature.csv"
+PRESSURE_PATH = "fakepath/DeploymentData/Pressure/Pressure.csv"
+HUMIDITY_PATH = "fakepath/DeploymentData/Humidity/Humidity.csv"
+
+#Cloud Services / API Keys
+ADAFRUIT_IO_USERNAME = "username"
+ADAFRUIT_IO_KEY = "aio_key"
+
+
