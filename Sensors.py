@@ -5,7 +5,8 @@ import config
 import time
 import os
 import sys
-
+import threading
+from Heartbeats import *
 
 BME.init()
 LUX.init()
@@ -40,10 +41,18 @@ print(humpath)
 #count = 0
 #maxcount = 10
 
+def CollectSound():
+    import Sound
+    while(1):
+        Sound.GetData()
+
+SoundThread = threading.Thread(target=CollectSound, args=(), daemon=True)
+SoundThread.start()
+
 while True:
     temp, humidity, pressure = BME.data()
     light = LUX.lux()
-    print('Temp={0:0.1f}*C Humidity={1:0.1f}% Pressure={2:0.1f} Light={3:0.1f}'.format(temp, humidity, pressure, light))
+    #print('Temp={0:0.1f}*C Humidity={1:0.1f}% Pressure={2:0.1f} Light={3:0.1f}'.format(temp, humidity, pressure, light))
     temperature = '%.2f'%(temp)
     humidity = '%.2f'%(humidity)
     pressure = '%.2f'%(pressure)
@@ -55,6 +64,8 @@ while True:
 #        aio.send(light_feed.key, str(light))
 #        count = 0
 #    count += 1
+    sendHeartBeat(relay,deployment,light,temperature,pressure,humidity)
+
     try:
         with open(lightpath,'a+') as file:
             file.write(time.ctime()+","+light+"\n")

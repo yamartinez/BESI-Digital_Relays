@@ -1,13 +1,20 @@
+#import warnings
+#warnings.filterwarnings("ignore",message="Warnings are being ignored")
+import math
 import pyaudio
 import numpy as np
 import wave
-import thread
+from threading import Thread
 import time
 from pyAudioAnalysis import ShortTermFeatures
+import config
 
-CHUNKSIZE = 64   # fixed chunk size
-RATE = 8000      # 8kHz Sampling rate
-SAMPLE_DUR = 0.5 # 500ms sampling with 250ms overlap
+_vars = config.get()
+SOUND_PATH = _vars["SOUND_PATH"]
+
+CHUNKSIZE = 512   # fixed chunk size
+RATE = 16000      # 16kHz Sampling rate
+SAMPLE_DUR = 0.25 # 250ms sampling with 50% overlap
 
 # initialize pyaudio
 p = pyaudio.PyAudio()
@@ -16,7 +23,7 @@ p = pyaudio.PyAudio()
 # -- This code snippet was used to determine ID of I2S Microphone -- #
 
 # Get input device number
-#info = p.get_host_api_info_by_index(0)
+#info = p.get_host_api_info_by_ind:ex(0)
 #numdevices = info.get('deviceCount')
 #for i in range(0, numdevices):
 #        if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
@@ -25,26 +32,28 @@ p = pyaudio.PyAudio()
 
 # -- Init *MUST* be called before any of the other functions -- #
 #it must also be called if Terminate() is called to resume audio stream
-def Init():
-    global p
-    stream = p.open(format=pyaudio.paInt32, channels=1, rate=RATE,
-                input=True, frames_per_buffer=CHUNKSIZE,
-                input_device_index = 2)
+stream = p.open(format=pyaudio.paInt32, channels=1, rate=RATE,input=True, frames_per_buffer=CHUNKSIZE,input_device_index = 2)
 
-first_half = []
-second_half = []
-combinedData = []
+first_half = []#np.empty(1)
+second_half = []#np.empty(1)
+combinedData = []#np.empty(1)
 counter = 0
 
-def AnalyzeData(data):
-    F, f_names = ShortTermFeatures.feature_extraction(data, RATE, SAMPLE_DUR*RATE, (SAMPLE_DUR/2)*RATE)
-    # F is the data, so save that to the CSV file for audio data
+
+def StoreAnalysis():
     return
+
+def AnalyzeData(data):
+    F, f_names = ShortTermFeatures.feature_extraction(data, RATE, SAMPLE_DUR*RATE, (SAMPLE_DUR/2)*RATE,deltas=False)
+    # F is the data, so save that to the CSV file for audio data
+    #for i in range(len(F)):
+    #    print(f_names[i],F[i])
+    return F,f_names
 
 
 #Only to be used in case that you want to store audio samples 
 def WriteData(data):
-    t = Time.time() # use to generate timestamp for file name
+    t = time.time() # use to generate timestamp for file name
     filename = "RawAudio.wav" # <- file naming convention
     wf = wave.open(filename,'wb') #Open wave file in write bytes mode
     wf.setchannels(1)     #Mono channel audio
@@ -54,54 +63,95 @@ def WriteData(data):
     wf.close()
     return 
 
-def CombineData(first_half,second_half):
+def CombineData(ts,first_half,second_half):
     global combinedData
     combinedData = []
-    if counter%2 == 0:
-        combinedData.append(second_half)
-        combinedData.append(first_half)
-    else:
-        combinedData.append(first_half)
-        combinedData.append(second_half)
 
-    AnalyzeData(combinedData)
+    #print(type(first_half))
+    #print(type(second_half))
+    #for i in first_half:
+    #    print(i)
+
+    if counter%2 == 1:
+        combinedData.append(first_half)
+        combinedData.append(second_half)
+        #combinedData = np.concatenate(second_half,first_half).ravel().T
+    else:
+        combinedData.append(second_half)
+        combinedData.append(first_half)
+        #combinedData = np.concatenate(first_half,second_half).ravel().T
+    
+    cD = np.concatenate(combinedData)
+    F,fn = AnalyzeData(cD)
+
+    #Write to CSV File:
+    try:
+        with open(SOUND_PATH,'a+') as file:
+                file.write(ts)
+                for feature in F:
+                    file.write(","+str(feature[0]))
+                file.write("\n")
+    except Exception as e:
+        print(e)
+
 
     # -- NO LONGER NEEDED -- #
     #Write to .wav file on another thread
     #WriteData(combinedData)
 
-def DataThread(fh,sh):
+def DataThread(ts,fh,sh):
     #Copy data
-    f_h = fh[:]
-    s_h = sh[:]
+    f_h = np.copy(fh)
+    s_h = np.copy(sh)
     #Do everything in a new thread
-    CombineData(f_h,s_h)
-    return
+    thread = Thread(target=CombineData, args=(ts,f_h,s_h,))
+    thread.start()
+    #CombineData(f_h,s_h)
 
 # -- Gathers data from the micrphone and calls WriteData then AnalyzeData() -- #
 def GetData():
     global first_half, second_half, counter
-    npd = []
-    #d = []
+    
+    timestamp = time.ctime()
 
+    npd = []#np.empty(1,)
+    #d = []
+    
+    #t = time.time()
+    
     # -- Take 250ms of sound and put it in either first/second half -- #
-    for i in range(0, int(RATE/CHUNKSIZE * .25)):
-        data = stream.read(CHUNKSIZE)
+    for i in range(0, int(math.ceil(RATE/CHUNKSIZE * (SAMPLE_DUR/2)))):
+        data = stream.read(CHUNKSIZE,exception_on_overflow=False)
         numpydata = np.frombuffer(data, dtype=np.uint32)
 	#d.append(data)
-	#npd.append(numpydata)
-    if counter % 2 == 0:
-        first_half = npd[:]
-    else:
-        second_half = npd[:]
+        npd.append(numpydata)
 
-    DataThread(first_half,second_half)
+    #t2 = time.time()
+
+    if counter % 2 == 0:
+        first_half = np.concatenate(npd).ravel()#np.array(npd)
+    else:
+        second_half = np.concatenate(npd).ravel()#np.array(npd)
+
+    if counter > 0:
+        DataThread(timestamp,first_half,second_half)
+    
+    #t3 = time.time()
+
+    #rectime = t2-t
+    #proctime = t3-t2
+    #alltime = t3-t
+    #if counter>0:
+    #    print("Recording Time:    ",rectime)
+    #    print("Processing Time:   ",proctime)
+    #    print("Total Time Elapsed:",alltime)
+    # -- TEST ONLY -- #
+    #for i in npd:
+    #    print(i)
+
     counter += 1
 
 def StopAudoStream():
     stream.stop_stream()
     stream.close()
 
-def Terimante():
-    stream.stop_stream()
-    stream.close()

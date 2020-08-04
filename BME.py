@@ -12,32 +12,36 @@ bme280 = None
 def init():
 	global bme280
 	try:
-		bme280 = adafruit_bme280.Adafruit_BME280_SPI(spi, bme_cs)
-		return 0
+	    bme280 = adafruit_bme280.Adafruit_BME280_SPI(spi, bme_cs)
+	    return 0
 	except:
-		return -1
+            print("PTH Initialization Error")
+            return -1
 
 def temp():
 	try:
-		return bme280.temperature
+	    return bme280.temperature
 	except:
-		return -1
+            print("PTH Temp Error")
+            return -1
 
 def humidity():
 	try:
-		return bme280.humidity
+	    return bme280.humidity
 	except:
-		return -1
+            print("PTH Hum Error")
+            return -1
 
 def pressure():
 	try:
-		return bme280.pressure
+	    return bme280.pressure
 	except:
-		return -1
+            print("PTH Pres Error")
+            return -1
 
 
 def data():
 	try:
-		return [temp(),humidity(),pressure()]
+	    return [temp(),humidity(),pressure()]
 	except:
-		return [-1,-1,-1]
+            return [-1,-1,-1]
