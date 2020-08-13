@@ -8,6 +8,8 @@ import sys
 import threading
 from Heartbeats import *
 
+print("Started Sensor Program")
+
 BME.init()
 LUX.init()
 

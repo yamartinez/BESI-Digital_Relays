@@ -14,7 +14,7 @@ SOUND_PATH = _vars["SOUND_PATH"]
 
 CHUNKSIZE = 512   # fixed chunk size
 RATE = 16000      # 16kHz Sampling rate
-SAMPLE_DUR = 0.25 # 250ms sampling with 50% overlap
+SAMPLE_DUR = 0.5 # 250ms sampling with 50% overlap
 
 # initialize pyaudio
 p = pyaudio.PyAudio()

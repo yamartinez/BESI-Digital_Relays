@@ -19,6 +19,6 @@ def sendHeartBeat(deviceID,deployment,lux,tmp,prs,hum):
     req = request.Request(URL+'relay',encodeddata)
     try:
         with request.urlopen(req) as res:
-            print(res.read())
+            res.read()
     except:
         print("err")
