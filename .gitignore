@@ -1,2 +1,5 @@
-config
+*.pyc
+*.wav
+*.txt
+__pycache__
 .env
