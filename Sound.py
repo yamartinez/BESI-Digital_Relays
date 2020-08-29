@@ -56,10 +56,10 @@ def WriteData(data):
     t = time.time() # use to generate timestamp for file name
     filename = "RawAudio.wav" # <- file naming convention
     wf = wave.open(filename,'wb') #Open wave file in write bytes mode
-    wf.setchannels(1)     #Mono channel audio
+    wf.setnchannels(1)     #Mono channel audio
     wf.setsampwidth(4)    #Using 32-bit audio samples - 4 bytes
     wf.setframerate(RATE) #Set the sampling freq of audio
-    wf.writeframes(b''.join(frames))
+    wf.writeframes(b''.join(data))
     wf.close()
     return
 
