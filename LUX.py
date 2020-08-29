@@ -1,11 +1,18 @@
 import board
 import busio
 import adafruit_tsl2591
+
+# Initialize I2C Interface
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = None
 
 
 def init():
+	"""Initialize TSL2591 Lux Sensor
+
+	Returns:
+		int: 0 = OK | -1 = ERR
+	"""
 	global sensor
 	try:
 		sensor = adafruit_tsl2591.TSL2591(i2c)
