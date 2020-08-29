@@ -10,8 +10,4 @@ TEMPERATURE_PATH = "fakepath/DeploymentData/Temperature/Temperature.csv"
 PRESSURE_PATH = "fakepath/DeploymentData/Pressure/Pressure.csv"
 HUMIDITY_PATH = "fakepath/DeploymentData/Humidity/Humidity.csv"
 
-#Cloud Services / API Keys
-ADAFRUIT_IO_USERNAME = "username"
-ADAFRUIT_IO_KEY = "aio_key"
-
 
