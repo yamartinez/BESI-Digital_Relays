@@ -1,14 +1,7 @@
-# Private information / environment variables can be stored here
-
 #Deployment/Device Info
-DEPLOYMENT = "Virginia Test"
-ID = 4
+DEPLOYMENT = "DEPLOYMENT_ID"
+ID = 0
 
 #File Paths
-LUX_PATH = "/home/pi/DeploymentData/Light/Light.csv"
-TEMPERATURE_PATH = "/home/pi/DeploymentData/Temperature/Temperature.csv"
-PRESSURE_PATH = "/home/pi/DeploymentData/Pressure/Pressure.csv"
-HUMIDITY_PATH = "/home/pi/DeploymentData/Humidity/Humidity.csv"
+STORAGE_PATH = "/home/pi/DeploymentData/Data.csv"
 SOUND_PATH = "/home/pi/DeploymentData/Sound/Sound.csv"
-
-

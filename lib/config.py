@@ -4,7 +4,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 private = {}
 
 try:
-	file = open(dir_path+"/config").read().strip().split('\n')
+	file = open(dir_path+"../config").read().strip().split('\n')
 
 	for line in file:
 		line = line.strip()
