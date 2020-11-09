@@ -13,4 +13,4 @@ config.py reads the config file and makes it available to the main python progra
 BME.py 
 
 
-Install dependencies with `pip3 install -r packages.pk`
+Install dependencies with `pip3 install -r requirements.txt`
