@@ -13,18 +13,15 @@ vars = config.get()
 
 deployment = vars['DEPLOYMENT']
 relay = vars['ID']
-lightpath = vars['LUX_PATH']
-temppath = vars['TEMPERATURE_PATH']
-prespath = vars['PRESSURE_PATH']
-humpath = vars['HUMIDITY_PATH']
 filepath = vars['STORAGE_PATH']
+
+if not deployment or not relay or not filepath:
+    print("Config Error")
+    exit(1)
 
 print(deployment)
 print(relay)
-print(lightpath)
-print(temppath)
-print(prespath)
-print(humpath)
+print(filepath)
 
 # Performs Audio Data Collection and Analysis
 def CollectSound():
