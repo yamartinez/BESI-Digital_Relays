@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PATH="/home/pi/DeploymentData/"
+PATH="/home/pi/BESI-Digital_Relays/Data/"
 
 cd $PATH
 
