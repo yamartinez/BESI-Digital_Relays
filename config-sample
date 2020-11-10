@@ -4,4 +4,4 @@ ID = 0
 
 #File Paths
 STORAGE_PATH = "/home/pi/DeploymentData/Data.csv"
-SOUND_PATH = "/home/pi/DeploymentData/Sound/Sound.csv"
+SOUND_PATH = "/home/pi/DeploymentData/Sound.csv"
