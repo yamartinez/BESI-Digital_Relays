@@ -82,7 +82,7 @@ piglow==1.2.4
 pigpio==1.42
 Pillow==5.4.1
 prompt-toolkit==1.0.15
-psutil==5.5.1
+psutil==5.6.6
 PyAudio==0.2.11
 -e git+https://github.com/tyiannak/pyAudioAnalysis.git@61ab72cce8ec951f170d44c62456ab22b7353b6d#egg=pyAudioAnalysis
 pycairo==1.16.2
