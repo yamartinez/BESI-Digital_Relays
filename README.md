@@ -8,9 +8,4 @@ task.sh is the CRON Job that runs periodically to zip and upload files to S3
 
 ## Python Files
 
-config.py reads the config file and makes it available to the main python program
-
-BME.py 
-
-
 Install dependencies with `chmod +x scripts/* && ./scripts/Dependencies.sh`
