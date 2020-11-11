@@ -1,19 +1,19 @@
-#import warnings
-#warnings.filterwarnings("ignore",message="Warnings are being ignored")
-import math
+import math, wave, time
+
+from threading import Thread
+
+import lib.config as config
+
+from lib.pyAudioAnalysis import ShortTermFeatures
+
 import pyaudio
 import numpy as np
-import wave
-from threading import Thread
-import time
-from pyAudioAnalysis import ShortTermFeatures
-import config
 
 _vars = config.get()
 SOUND_PATH = _vars["SOUND_PATH"]
 
 CHUNKSIZE = 512   # fixed chunk size
-RATE = 16000      # 16kHz Sampling rate
+RATE = 8000      # 16kHz Sampling rate
 SAMPLE_DUR = 0.5 # 250ms sampling with 50% overlap
 
 # initialize pyaudio
@@ -111,48 +111,50 @@ def DataThread(ts,fh,sh):
 # -- Gathers data from the micrphone and calls WriteData then AnalyzeData() -- #
 
 
-def GetData():
+def GetData(test_mode:bool = False, store_data:bool = True):
     global first_half, second_half, counter
     
-    timestamp = time.ctime()
+    timestamp = time.time()
 
     npd = []#np.empty(1,)
     #d = []
     
-    #t = time.time()
+    if test_mode:
+        t = time.time()
     
     # -- Take 250ms of sound and put it in either first/second half -- #
-    for i in range(0, int(math.ceil(RATE/CHUNKSIZE * (SAMPLE_DUR/2)))):
+    for _ in range(0, int(math.ceil(RATE/CHUNKSIZE * (SAMPLE_DUR/2)))):
         data = stream.read(CHUNKSIZE,exception_on_overflow=False)
         numpydata = np.frombuffer(data, dtype=np.uint32)
-	#d.append(data)
         npd.append(numpydata)
 
-    #t2 = time.time()
+    if test_mode:
+        t2 = time.time()
 
-    if counter % 2 == 0:
-        first_half = np.concatenate(npd).ravel()#np.array(npd)
-    else:
-        second_half = np.concatenate(npd).ravel()#np.array(npd)
+    if store_data:
+        if counter % 2 == 0:
+            first_half = np.concatenate(npd).ravel()#np.array(npd)
+        else:
+            second_half = np.concatenate(npd).ravel()#np.array(npd)
 
-    if counter > 0:
-        DataThread(timestamp,first_half,second_half)
+        if counter > 0:
+            DataThread(timestamp,first_half,second_half)
     
-    #t3 = time.time()
+    if test_mode:
+        t3 = time.time()
 
-    #rectime = t2-t
-    #proctime = t3-t2
-    #alltime = t3-t
-    #if counter>0:
-    #    print("Recording Time:    ",rectime)
-    #    print("Processing Time:   ",proctime)
-    #    print("Total Time Elapsed:",alltime)
-    # -- TEST ONLY -- #
-    #for i in npd:
-    #    print(i)
+        rectime = t2-t
+        proctime = t3-t2
+        alltime = t3-t
+        if counter>0:
+            print("Recording Time:    ",rectime)
+            print("Processing Time:   ",proctime)
+            print("Total Time Elapsed:",alltime)
 
     counter += 1
 
+    if test_mode:
+        return npd
 
 def StopAudoStream():
     stream.stop_stream()
