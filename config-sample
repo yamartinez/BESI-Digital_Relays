@@ -3,5 +3,5 @@ DEPLOYMENT = "DEPLOYMENT_ID"
 ID = 0
 
 #File Paths
-STORAGE_PATH = "/home/pi/DeploymentData/Data.csv"
-SOUND_PATH = "/home/pi/DeploymentData/Sound.csv"
+STORAGE_PATH = "/home/pi/BESI-Digital_Relays/Data/Data.csv"
+SOUND_PATH = "/home/pi/BESI-Digital_Relays/Data/Sound.csv"
