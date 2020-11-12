@@ -161,3 +161,5 @@ def StopAudoStream():
     stream.stop_stream()
     stream.close()
 
+if __name__ == "__main__": 
+    Identify_Devices()
