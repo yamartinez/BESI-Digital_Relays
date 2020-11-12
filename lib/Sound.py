@@ -33,8 +33,7 @@ def Identify_Devices():
 
 # -- Init *MUST* be called before any of the other functions -- #
 #it must also be called if Terminate() is called to resume audio stream
-stream = p.open(format=pyaudio.paInt32, channels=1, rate=RATE,input=True, frames_per_buffer=CHUNKSIZE,input_device_index = 2)
-
+stream = None
 first_half = []#np.empty(1)
 second_half = []#np.empty(1)
 combinedData = []#np.empty(1)
@@ -163,3 +162,6 @@ def StopAudoStream():
 
 if __name__ == "__main__": 
     Identify_Devices()
+
+else:
+    p.open(format=pyaudio.paInt32, channels=1, rate=RATE,input=True, frames_per_buffer=CHUNKSIZE,input_device_index = 2)
