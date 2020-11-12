@@ -23,13 +23,15 @@ p = pyaudio.PyAudio()
 # -- This code snippet was used to determine ID of I2S Microphone -- #
 
 # Get input device ID numbers
-def Identify_Devices():
+def Identify_Devices(init=False):
     info = p.get_host_api_info_by_index(0)
     numdevices = info.get('deviceCount')
     for i in range(0, numdevices):
         if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
+            if init:
+                return i
+            
             print ("Input Device id ", i, " - ", p.get_device_info_by_host_api_device_index(0, i).get('name'))
-
 
 # -- Init *MUST* be called before any of the other functions -- #
 #it must also be called if Terminate() is called to resume audio stream
@@ -164,4 +166,7 @@ if __name__ == "__main__":
     Identify_Devices()
 
 else:
-    p.open(format=pyaudio.paInt32, channels=1, rate=RATE,input=True, frames_per_buffer=CHUNKSIZE,input_device_index = 2)
+    devId = Identify_Devices(init=True)
+    if devId is None:
+        exit(1)
+    p.open(format=pyaudio.paInt32, channels=1, rate=RATE,input=True, frames_per_buffer=CHUNKSIZE,input_device_index = devId)
