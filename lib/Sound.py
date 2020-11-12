@@ -2,9 +2,12 @@ import math, wave, time
 
 from threading import Thread
 
-import config as config
-
-from pyAudioAnalysis import ShortTermFeatures
+try:
+    import config as config
+    from pyAudioAnalysis import ShortTermFeatures
+except:
+    import lib.config as config
+    from lib.pyAudioAnalysis import ShortTermFeatures
 
 import pyaudio
 import numpy as np
