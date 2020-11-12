@@ -172,4 +172,4 @@ else:
     devId = Identify_Devices(init=True)
     if devId is None:
         exit(1)
-    p.open(format=pyaudio.paInt32, channels=1, rate=RATE,input=True, frames_per_buffer=CHUNKSIZE,input_device_index = devId)
+    stream = p.open(format=pyaudio.paInt32, channels=1, rate=RATE,input=True, frames_per_buffer=CHUNKSIZE,input_device_index = devId)
