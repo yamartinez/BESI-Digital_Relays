@@ -40,6 +40,6 @@ if __name__ == "__main__":
         import lib.config as config
     
     _vars = config.get()
-    deployment = vars['DEPLOYMENT']
-    deviceID = vars['ID']
+    deployment = _vars['DEPLOYMENT']
+    deviceID = _vars['ID']
     sendHeartBeat(deviceID,deployment,bs=True)
