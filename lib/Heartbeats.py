@@ -3,7 +3,7 @@ from urllib import parse, request
 URL:str = "http://remote.besic.org/heartbeat/"
 
 
-def sendHeartBeat(deviceID,deployment,lux,tmp,prs,hum):
+def sendHeartBeat(deviceID,deployment,lux=None,tmp=None,prs=None,hum=None,bs=False):
     """Sends measurements to server for remote monitoring
 
     Args:
@@ -26,10 +26,20 @@ def sendHeartBeat(deviceID,deployment,lux,tmp,prs,hum):
     encodeddata = parse.urlencode(data)
     encodeddata = encodeddata.encode('ascii')
 
-
-    req = request.Request(URL+'relay',encodeddata)
+    req = request.Request(URL+('bs'if bs else 'relay'),encodeddata)
     try:
         with request.urlopen(req) as res:
             res.read()
     except:
         print("err")
+
+if __name__ == "__main__": 
+    try:
+        import config as config
+    except:
+        import lib.config as config
+    
+    _vars = config.get()
+    deployment = vars['DEPLOYMENT']
+    deviceID = vars['ID']
+    sendHeartBeat(deviceID,deployment,bs=True)
