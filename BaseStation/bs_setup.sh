@@ -42,7 +42,7 @@ echo -e "127.0.1.1\t$bs" | sudo tee -a /etc/hosts > /dev/null
 
 echo -e "Setting up Basestation AP"
 
-interface=wlan0
+interface=wlan1
 
 yes | sudo apt install dnsmasq hostapd
 
