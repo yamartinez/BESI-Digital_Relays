@@ -52,7 +52,7 @@ sudo systemctl stop hostapd
 
 sudo mv /etc/dnsmasq.conf  /etc/dnsmasq.conf.orig
 
-echo -e "interface=$interface\ndhcp-range=192.168.17.100,192.168.17.120,255.255.255.0,24h" | sudo tee -a /etc/dnsmasq.conf > /dev/null
+echo -e "interface=wlan1\ndhcp-range=192.168.17.100,192.168.17.120,255.255.255.0,24h" | sudo tee -a /etc/dnsmasq.conf > /dev/null
 
 
 sudo cp /etc/sysctl.conf /etc/sysctl.conf.orig
@@ -60,19 +60,19 @@ echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf > /dev/null
 
 sudo sysctl -w net.ipv4.ip_forward=1
 
-sudo iptables -t nat -A  POSTROUTING -o $in_interface -j MASQUERADE
+sudo iptables -t nat -A  POSTROUTING -o wlan0 -j MASQUERADE
 
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
 sudo cp /etc/dhcpcd.conf /etc/dhcpcd.conf.orig
-echo -e "interface $interface\n\tstatic ip_address=192.168.17.1/24\n\tnohook wpa_supplicant" | sudo tee -a /etc/dhcpcd.conf > /dev/null
+echo -e "interface wlan1\n\tstatic ip_address=192.168.17.1/24\n\tnohook wpa_supplicant" | sudo tee -a /etc/dhcpcd.conf > /dev/null
 
 (sudo cat /etc/rc.local | head -n -1  && echo -e "# call <periodictask>\n\niptables-restore < /etc/iptables.ipv4.nat\n\nexit0") > tmp
 
 sudo cp /etc/rc.local /etc/rc.local.orig
 cat tmp | sudo tee /etc/rc.local > /dev/null && rm tmp
 
-echo -e "interface=$interface
+echo -e "interface=wlan1
 driver=nl80211
 ssid=BESI-Network
 hw_mode=g
