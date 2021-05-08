@@ -42,7 +42,8 @@ echo -e "127.0.1.1\t$bs" | sudo tee -a /etc/hosts > /dev/null
 
 echo -e "Setting up Basestation AP"
 
-interface=wlan1
+in_interface=wlan0
+out_interface=wlan1
 
 yes | sudo apt install dnsmasq hostapd
 
@@ -59,7 +60,7 @@ echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf > /dev/null
 
 sudo sysctl -w net.ipv4.ip_forward=1
 
-sudo iptables -t nat -A  POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -t nat -A  POSTROUTING -o $in_interface -j MASQUERADE
 
 sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
 
