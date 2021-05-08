@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import board
 import busio
 import adafruit_tsl2591
