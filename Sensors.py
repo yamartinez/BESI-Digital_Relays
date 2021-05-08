@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import lib.BME as BME
 import lib.LUX as LUX
 import lib.config as config

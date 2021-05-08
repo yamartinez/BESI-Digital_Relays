@@ -1,4 +1,5 @@
-import os 
+#!/usr/bin/python3
+import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 private = {}

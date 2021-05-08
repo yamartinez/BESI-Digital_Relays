@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from urllib import parse, request
 
 URL:str = "http://remote.besic.org/heartbeat/"
